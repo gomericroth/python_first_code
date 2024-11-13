@@ -1,8 +1,14 @@
 import psutil
 import time
+from dotenv import load_dotenv
+import os
 
-# Specify the list of process names to kill
-PROCESS_NAMES = ['netwiz.exe', 'bzjwhfivlx.exe','notepad.exe']
+# Load environment variables from .env file
+load_dotenv()
+
+# Get process names from .env file
+PROCESS_NAMES = os.getenv('PROCESS_NAMES', '').split(',')
+PROCESS_NAMES = [name.strip() for name in PROCESS_NAMES if name.strip()]
 
 def kill_process_by_names(process_names):
     """Kill all processes with the specified names."""
@@ -26,6 +32,10 @@ def kill_process_by_names(process_names):
     return killed_any
 
 def main():
+    if not PROCESS_NAMES:
+        print("No process names specified in .env file. Exiting.")
+        return
+
     try:
         print(f"Monitoring for processes: {', '.join(PROCESS_NAMES)}. Press Ctrl+C to stop.")
         
